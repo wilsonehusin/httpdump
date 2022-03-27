@@ -3,6 +3,11 @@ import { serve } from "https://deno.land/std@0.132.0/http/server.ts";
 // @ts-ignore(2691)
 import { VERSION } from "https://deno.land/std@0.132.0/version.ts";
 
+const defaultHeaders = {
+  "content-type": "application/json",
+  "x-deno-std": VERSION,
+};
+
 async function handler(request: Request): Promise<Response> {
   const reqHeaders: Record<string, string> = {};
   request.headers.forEach((v, k) => {
@@ -18,15 +23,15 @@ async function handler(request: Request): Promise<Response> {
     body: await request.text(),
   };
 
-  return new Response(JSON.stringify(req), {
-    headers: {
-      "content-type": "application/json",
-      "x-deno": Deno.version.deno,
-      "x-deno-v8": Deno.version.v8,
-      "x-deno-ts": Deno.version.typescript,
-      "x-deno-std": VERSION,
-    },
-  });
+  const headers = defaultHeaders.clone();
+
+  if (Deno.version !== undefined) {
+    headers["x-deno"] = Deno.version.deno;
+    headers["x-deno-v8"] = Deno.version.v8;
+    headers["x-deno-ts"] = Deno.version.typescript;
+  }
+
+  return new Response(JSON.stringify(req), { headers });
 }
 
 console.log("Listening on http://localhost:8000");
