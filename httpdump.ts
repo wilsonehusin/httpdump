@@ -3,12 +3,11 @@ import { serve } from "https://deno.land/std@0.132.0/http/server.ts";
 // @ts-ignore(2691)
 import { VERSION } from "https://deno.land/std@0.132.0/version.ts";
 
-
 async function handler(request: Request): Promise<Response> {
   const reqHeaders: Record<string, string> = {};
   request.headers.forEach((v, k) => {
     reqHeaders[k] = v;
-  })
+  });
   const req = {
     method: request.method,
     url: request.url,
@@ -18,8 +17,8 @@ async function handler(request: Request): Promise<Response> {
     redirect: request.redirect,
     body: await request.text(),
   };
-  
-  return new Response(JSON.stringify(req) + "\n", {
+
+  return new Response(JSON.stringify(req), {
     headers: {
       "content-type": "application/json",
       "x-deno": Deno.version.deno,
