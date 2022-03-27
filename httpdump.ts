@@ -3,7 +3,7 @@ import { serve } from "https://deno.land/std@0.132.0/http/server.ts";
 // @ts-ignore(2691)
 import { VERSION } from "https://deno.land/std@0.132.0/version.ts";
 
-const defaultHeaders = {
+const defaultHeaders: Record<string, string> = {
   "content-type": "application/json",
   "x-deno-std": VERSION,
 };
@@ -23,7 +23,7 @@ async function handler(request: Request): Promise<Response> {
     body: await request.text(),
   };
 
-  const headers = defaultHeaders.clone();
+  const headers = defaultHeaders;
 
   if (Deno.version !== undefined) {
     headers["x-deno"] = Deno.version.deno;
